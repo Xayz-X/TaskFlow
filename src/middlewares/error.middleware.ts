@@ -3,6 +3,8 @@ import { ZodError } from "zod";
 import { ErrorObject } from "../types/errors";
 import { MongoServerError } from "mongodb";
 import mongoose from "mongoose";
+import { APIError } from "../helpers/error";
+import { StatusCodes } from "../helpers/statusCodes";
 
 const errorMiddleware = async (
   err: unknown,
@@ -11,46 +13,58 @@ const errorMiddleware = async (
   next: NextFunction
 ) => {
   try {
+    // if any error does nto match finally it will raise defualt error of 500
+    // with a generic message
     const error: ErrorObject = {
       success: false,
-      statusCode: 500,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       message: `Something went wrong please try again later.`,
     };
+
+    // this is custom error class
+    if (err instanceof APIError) {
+      error.statusCode = err.statusCode;
+      error.message = err.message;
+    }
 
     if (err instanceof ZodError) {
       const messages = err.issues
         .map((issue) => `${issue.message} -> ${issue.path.join(", ")}`)
         .join("; ");
-      error.statusCode = 400;
+      error.statusCode = StatusCodes.BAD_REQUEST;
+      error.message = messages;
+    }
+    if (
+      err instanceof mongoose.Error &&
+      err.cause instanceof MongoServerError
+    ) {
+      // Handle duplicate key through the cause
+      if (err.cause.code === 11000) {
+        const field = Object.keys(err.cause.keyValue)[0];
+        error.statusCode = StatusCodes.CONFLICT;
+        error.message = `${field} is already taken`;
+      }
+    } else if (err instanceof MongoServerError && err.code === 11000) {
+      // Handle raw MongoServerError (first attempt)
+      const field = Object.keys(err.keyValue)[0];
+      error.statusCode = StatusCodes.CONFLICT;
+      error.message = `${field} is already taken`;
+    }
+
+    if (err instanceof mongoose.Error.CastError) {
+      // Mongoose-specific errors
+      error.statusCode = StatusCodes.NOT_FOUND;
+      error.message = "Resource not found";
+    } else if (err instanceof mongoose.Error.ValidationError) {
+      const messages = Object.values(err.errors)
+        .map((e) => e.message)
+        .join(", ");
+      error.statusCode = StatusCodes.BAD_REQUEST;
       error.message = messages;
     }
 
-    // all database error
-    if (err instanceof MongoServerError) {
-      if (err.code === 11000) {
-        // Duplicate key error
-        const field = Object.keys(err.keyValue)[0];
-        error.statusCode = 409;
-        error.message = `${field} is already taken`;
-      } else if (err instanceof mongoose.Error.CastError) {
-        // cast error
-        error.statusCode = 404;
-        error.message = "resources not found";
-      } else if (err instanceof mongoose.Error.ValidationError) {
-        // validation error
-        const messages = Object.values(err.errors)
-          .map((e) => e.message)
-          .join(", ");
-        error.statusCode = 400;
-        error.message = messages;
-      } else {
-        // databse error
-        error.statusCode = 400;
-        error.message = "uncaught database error";
-      }
-    }
     // we will add more errors type here...
-
+    console.log(err);
     response.status(error.statusCode).send(error);
   } catch (error) {
     next(error);
