@@ -4,6 +4,7 @@ import { ENVIRONMENT, PORT } from "./config/env";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route";
 import errorMiddleware from "./middlewares/error.middleware";
+import connectToDatabase from "./database/database";
 
 const app = express();
 
@@ -27,6 +28,14 @@ app.get("/health", (request: Request, response: Response): void => {
 app.use(errorMiddleware);
 
 // start the server on the .env file defined port
-app.listen(PORT, () =>
-  console.log(`${ENVIRONMENT} server listening on http://localhost:${PORT}`)
+app.listen(
+  PORT,
+  async () =>
+    await connectToDatabase()
+      .then(() =>
+        console.log(
+          `${ENVIRONMENT} server listening on http://localhost:${PORT}`
+        )
+      )
+      .catch((error) => console.log(error))
 );

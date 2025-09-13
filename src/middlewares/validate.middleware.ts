@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { Request, Response, NextFunction } from "express-serve-static-core";
 
-export const validateRequest =
+const validateRequestMiddleware =
   (schema: z.ZodObject) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -12,3 +12,5 @@ export const validateRequest =
       next(err);
     }
   };
+
+export default validateRequestMiddleware;
