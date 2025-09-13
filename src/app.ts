@@ -1,4 +1,5 @@
 import express from "express";
+import { PORT } from "./config/env";
 
 const app = express();
 
@@ -9,4 +10,6 @@ app.get("/", (req: express.Request, res: express.Response): void => {
   });
 });
 
-app.listen(5500, () => console.log("Server listening on 5500 port"));
+app.listen(PORT, () =>
+  console.log(`Server listening on http://localhost:${PORT}`)
+);
