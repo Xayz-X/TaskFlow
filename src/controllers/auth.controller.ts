@@ -1,16 +1,17 @@
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express-serve-static-core";
+
+import parseDuration from "../helpers/dt";
+import UserModel from "../models/user.model";
+import { ResponseObject } from "../types/response.type";
+import { APIError } from "../helpers/error";
+import { StatusCodes } from "../helpers/statusCodes";
+import { JWT_EXPIRATION, JWT_SECRET } from "../config/env";
 import {
   RegisterRequestBody,
   LoginRequestbody,
 } from "../contracts/auth.contract";
-import UserModel from "../models/user.model";
-import { ResponseObject } from "../types/response";
-import bcrypt from "bcrypt";
-import { APIError } from "../helpers/error";
-import { StatusCodes } from "../helpers/statusCodes";
-import { JWT_EXPIRATION, JWT_SECRET } from "../config/env";
-import parseDuration from "../helpers/dt";
 
 export const authRegister = async (
   request: Request<{}, {}, RegisterRequestBody>,
@@ -43,9 +44,12 @@ export const authLogin = async (
   request: Request<{}, {}, LoginRequestbody>,
   response: Response<ResponseObject>
 ): Promise<void> => {
+  // Query the user by email
   const { email, password } = request.body;
   const user = await UserModel.findOne({ email }).select("+password");
 
+  // 1st -> validate user an exist with the requested email
+  // 2nd -> Validate if the hashed password match with the requested password
   if (!user) {
     throw new APIError(StatusCodes.FORBIDDEN, "invalid email or password");
   } else {
@@ -54,7 +58,7 @@ export const authLogin = async (
       throw new APIError(StatusCodes.FORBIDDEN, "invalid email or password");
     }
   }
-
+  // Generate a new JWT token
   const expiresAt =
     Math.floor(Date.now() / 1000) + parseDuration(JWT_EXPIRATION);
   const jwtToken = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, {

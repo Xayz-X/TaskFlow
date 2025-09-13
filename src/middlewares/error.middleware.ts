@@ -1,8 +1,9 @@
-import { NextFunction, Request, Response } from "express-serve-static-core";
 import { ZodError } from "zod";
-import { ErrorObject } from "../types/errors";
-import { MongoServerError } from "mongodb";
 import mongoose from "mongoose";
+import { MongoServerError } from "mongodb";
+import { NextFunction, Request, Response } from "express-serve-static-core";
+
+import { ErrorObject } from "../types/error.type";
 import { APIError } from "../helpers/error";
 import { StatusCodes } from "../helpers/statusCodes";
 
