@@ -10,6 +10,7 @@ export const authRegister = async (
   response: Response
 ): Promise<void> => {
   const { username, email, password } = request.body;
+
   const newUser = await UserModel.create([{ username, email, password }]);
 
   response.status(201).send({
