@@ -12,9 +12,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// custom middlewares
-app.use(errorMiddleware);
-
 // routes
 app.use("/auth", authRouter);
 
@@ -25,6 +22,9 @@ app.get("/health", (request: Request, response: Response): void => {
     message: `Running on port ${PORT}`,
   });
 });
+
+// custom middlewares
+app.use(errorMiddleware);
 
 // start the server on the .env file defined port
 app.listen(PORT, () =>

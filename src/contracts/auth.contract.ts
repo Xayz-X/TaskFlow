@@ -1,11 +1,6 @@
 // auth/register route request body
-export interface RegisterRequestBody {
-  username: string;
-  email: string;
-  password: string;
-}
-// auth/login
-export interface LoginRequestBody {
-  email: string;
-  password: string;
-}
+import { z } from "zod";
+import { registerValidatorSchema } from "../validators/auth.validator";
+
+// register body
+export type RegisterRequestBody = z.infer<typeof registerValidatorSchema>;
