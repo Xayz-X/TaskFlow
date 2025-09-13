@@ -10,7 +10,7 @@ This document provides a structured overview of all API endpoints for TaskFlow, 
 | ------ | ---------------- | --------------------------------- | ------------- |
 | POST   | `/auth/register` | Register new user                 | Admin only    |
 | POST   | `/auth/login`    | User login                        | Public        |
-| POST   | `/auth/refresh`  | Refresh JWT token                 | Authenticated |
+| GET    | `/auth/refresh`  | Refresh JWT token                 | Authenticated |
 | POST   | `/auth/logout`   | Logout & invalidate refresh token | Authenticated |
 
 ---

@@ -1,7 +1,8 @@
+import { StatusCodes } from "./statusCodes";
 export class APIError extends Error {
-  public statusCode: number;
+  public statusCode: StatusCodes;
 
-  constructor(statusCode: number, message: string) {
+  constructor(statusCode: StatusCodes, message: string) {
     super(message);
     this.statusCode = statusCode;
   }

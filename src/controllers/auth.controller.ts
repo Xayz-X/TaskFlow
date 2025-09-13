@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { Request, Response } from "express-serve-static-core";
 import {
   RegisterRequestBody,
@@ -8,12 +9,18 @@ import { ResponseObject } from "../types/response";
 import bcrypt from "bcrypt";
 import { APIError } from "../helpers/error";
 import { StatusCodes } from "../helpers/statusCodes";
+import { JWT_EXPIRATION, JWT_SECRET } from "../config/env";
 
 export const authRegister = async (
   request: Request<{}, {}, RegisterRequestBody>,
   response: Response<ResponseObject>
 ): Promise<void> => {
   const { username, email, password } = request.body;
+
+  const existingUser = await UserModel.findOne({ email });
+  if (existingUser) {
+    throw new APIError(StatusCodes.CONFLICT, "email is taken");
+  }
 
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -40,19 +47,23 @@ export const authLogin = async (
 
   if (!user) {
     throw new APIError(StatusCodes.FORBIDDEN, "invalid email or password");
+  } else {
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      throw new APIError(StatusCodes.FORBIDDEN, "invalid email or password");
+    }
   }
-  // why here still shwoin suer possibly null?
-  const isValidPassword = await bcrypt.compare(password, user.password);
 
-  if (!isValidPassword) {
-    throw new APIError(StatusCodes.FORBIDDEN, "invalid email or password");
-  }
+  const expiresAt = Math.floor(Date.now() / 1000) + 24 * 60 * 60;
+  const jwtToken = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, {
+    expiresIn: JWT_EXPIRATION as jwt.SignOptions["expiresIn"],
+  });
 
   const resp: ResponseObject = {
     success: true,
     statusCode: StatusCodes.SUCCESS,
     message: `logged in successfuly`,
-    data: user,
+    data: { token: jwtToken, expiresAt },
   };
   response.status(resp.statusCode).send(resp);
 };
