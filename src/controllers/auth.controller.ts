@@ -10,6 +10,7 @@ import bcrypt from "bcrypt";
 import { APIError } from "../helpers/error";
 import { StatusCodes } from "../helpers/statusCodes";
 import { JWT_EXPIRATION, JWT_SECRET } from "../config/env";
+import parseDuration from "../helpers/dt";
 
 export const authRegister = async (
   request: Request<{}, {}, RegisterRequestBody>,
@@ -54,7 +55,8 @@ export const authLogin = async (
     }
   }
 
-  const expiresAt = Math.floor(Date.now() / 1000) + 24 * 60 * 60;
+  const expiresAt =
+    Math.floor(Date.now() / 1000) + parseDuration(JWT_EXPIRATION);
   const jwtToken = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, {
     expiresIn: JWT_EXPIRATION as jwt.SignOptions["expiresIn"],
   });
