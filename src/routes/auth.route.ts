@@ -32,6 +32,6 @@ authRouter.post(
   authLogin
 );
 authRouter.get("/refresh", authorizeMiddleware(true), authRefresh);
-authRouter.post("/logout", authLogout);
+authRouter.post("/logout", authorizeMiddleware(true), authLogout);
 
 export default authRouter;

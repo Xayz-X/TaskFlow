@@ -27,3 +27,10 @@ Content-Type: application/json
 GET {{host}}/auth/refresh
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM1ZWZkNmU4ZDA5NjYxYjIxNDZjNzAiLCJyb2xlIjoiZW1wbG95ZWUiLCJpYXQiOjE3NTc4NTY4OTcsImV4cCI6MTc1Nzk0MzI5N30.2OHavFCGGcliYChsFWMxwnT7MZcmF_4uyRqaL93icIU
+
+### Logout 
+POST {{host}}/auth/logout
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM1ZWZkNmU4ZDA5NjYxYjIxNDZjNzAiLCJyb2xlIjoiZW1wbG95ZWUiLCJpYXQiOjE3NTc4NTY4OTcsImV4cCI6MTc1Nzk0MzI5N30.2OHavFCGGcliYChsFWMxwnT7MZcmF_4uyRqaL93icIU
+
+{}

@@ -40,7 +40,10 @@ const authorizeMiddleware =
           StatusCode.FORBIDDEN,
           "user does not exist, authentication failed"
         );
+      } else if (!userData.isLoggedIn) {
+        throw new APIError(StatusCode.FORBIDDEN, "you are not logged in");
       }
+
       request.user = userData;
       next();
     } catch (error) {

@@ -56,6 +56,15 @@ export const authLogin = async (
       throw new APIError(StatusCode.FORBIDDEN, "invalid email or password");
     }
   }
+
+  if (!user.isLoggedIn) {
+    // we will udpate tehe user obj for login if set to false
+    await UserModel.updateOne(
+      { email: user.email },
+      { $set: { isLoggedIn: true } }
+    );
+  }
+
   // Generate a new JWT token
   const { token, expiresAt } = signJwtToken(user._id.toString(), user.role);
 
@@ -88,4 +97,23 @@ export const authRefresh = async (
   };
   response.status(resp.statusCode).send(resp);
 };
-export const authLogout = (request: Request, response: Response): void => {};
+export const authLogout = async (
+  request: Request,
+  response: Response<ResponseObject>
+): Promise<void> => {
+  if (!request.user) {
+    return;
+  }
+  console.log(` Try to logout ${request.user.email}`);
+  await UserModel.updateOne(
+    { email: request.user.email },
+    { $set: { isLoggedIn: false } }
+  );
+  const resp: ResponseObject = {
+    success: true,
+    statusCode: StatusCode.SUCCESS,
+    message: "logout successfully",
+    data: { userId: request.user._id },
+  };
+  response.status(resp.statusCode).send(resp);
+};

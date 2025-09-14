@@ -7,6 +7,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "username is a required field"],
     },
+    role: {
+      type: String,
+      default: UserRole.Employee,
+      required: [true, "role is a required field"],
+      enum: Object.values(UserRole),
+    },
     email: {
       type: String,
       required: [true, "email is an required field"],
@@ -17,11 +23,10 @@ const userSchema = new mongoose.Schema(
       select: false,
       required: [true, "password is an required field"],
     },
-    role: {
-      type: String,
-      default: UserRole.Employee,
-      required: [true, "role is a required field"],
-      enum: Object.values(UserRole),
+    isLoggedIn: {
+      type: Boolean,
+      default: true,
+      required: true,
     },
   },
   { timestamps: true }
