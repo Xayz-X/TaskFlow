@@ -6,10 +6,11 @@ GET {{host}}/health
 ### Regiser a new user
 POST {{host}}/auth/register
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM1ZWZkNmU4ZDA5NjYxYjIxNDZjNzAiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTc4NTg3NjEsImV4cCI6MTc1Nzk0NTE2MX0.033aBHt4Edk1UhnqlO-GZw9ucoD48ZDaz2VW23Quxl8
 
 {
     "username": "test",
-    "email": "test@gmail.com",
+    "email": "test01@gmail.com",
     "password": "password"
 }
 

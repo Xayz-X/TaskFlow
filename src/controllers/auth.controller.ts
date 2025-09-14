@@ -4,7 +4,7 @@ import { Request, Response } from "express-serve-static-core";
 import UserModel from "../models/user.model";
 import { ResponseObject } from "../types/response.type";
 import { APIError } from "../helpers/error";
-import { StatusCode } from "../types/StatusCode.enum";
+import { StatusCode } from "../types/status-code.enum";
 import signJwtToken from "../helpers/authsign";
 
 import {
@@ -34,7 +34,7 @@ export const authRegister = async (
     success: true,
     statusCode: StatusCode.RESOURCE_CREATED,
     message: `user has been created`,
-    data: newUser,
+    data: newUser[0], // it's an array of newly created user
   };
   response.status(resp.statusCode).send(resp);
 };

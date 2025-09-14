@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authorizeMiddleware from "../middlewares/authorize.middleware";
+import roleMiddleware from "../middlewares/role.middleware";
 import {
   authRegister,
   authLogin,
@@ -13,14 +14,17 @@ import {
 } from "../validators/auth.validator";
 
 import requestValidatorMiddleware from "../middlewares/validate.middleware";
+import { UserRole } from "../types/user-role.enum";
 
 const authRouter = Router();
 
 authRouter.post(
   "/register",
+  authorizeMiddleware(), // user must be authorize to do it
+  roleMiddleware(UserRole.Admin), // only admin can create new user
   requestValidatorMiddleware(registerValidatorSchema),
   authRegister
-); // admin
+);
 
 authRouter.post(
   "/login",
