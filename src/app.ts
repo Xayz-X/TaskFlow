@@ -1,10 +1,12 @@
 import express from "express";
-import { Request, Response } from "express-serve-static-core";
-import { ENVIRONMENT, PORT } from "./config/env";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import { Request, Response } from "express-serve-static-core";
+
 import authRouter from "./routes/auth.route";
-import errorMiddleware from "./middlewares/error.middleware";
+import { ENVIRONMENT, PORT } from "./config/env";
 import connectToDatabase from "./database/database";
+import errorMiddleware from "./middlewares/error.middleware";
 
 const app = express();
 
@@ -12,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(helmet());
 
 // routes
 app.use("/auth", authRouter);
