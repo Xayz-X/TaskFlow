@@ -1,0 +1,28 @@
+@host = http://localhost:5500
+
+
+### Get all users
+GET {{host}}/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM2ZmJiM2IyMzFjM2FhYmY0ZjY4YzciLCJyb2xlIjoiZW1wbG95ZWUiLCJpYXQiOjE3NTc4NzEwOTQsImV4cCI6MTc1Nzk1NzQ5NH0.VtTTTF-CUXJ6gGXghGEmDUqPLkcx1gWzMTwZXmndQlQ
+
+### Get single user
+GET {{host}}/users/68c6fbb3b231c3aabf4f68c7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM2ZmJiM2IyMzFjM2FhYmY0ZjY4YzciLCJyb2xlIjoiZW1wbG95ZWUiLCJpYXQiOjE3NTc4NzEwOTQsImV4cCI6MTc1Nzk1NzQ5NH0.VtTTTF-CUXJ6gGXghGEmDUqPLkcx1gWzMTwZXmndQlQ
+
+### Udpate a user
+PUT {{host}}/users/68c6fbb3b231c3aabf4f68c7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM2ZmJiM2IyMzFjM2FhYmY0ZjY4YzciLCJyb2xlIjoiZW1wbG95ZWUiLCJpYXQiOjE3NTc4NzEwOTQsImV4cCI6MTc1Nzk1NzQ5NH0.VtTTTF-CUXJ6gGXghGEmDUqPLkcx1gWzMTwZXmndQlQ
+
+{
+    "username": "new-username",
+    "email": "new-like@gmail.com",
+    "password": "new-email"
+}
+
+### Delete a user
+DELETE {{host}}/users/68c6fbb3b231c3aabf4f68c7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGM2ZmJiM2IyMzFjM2FhYmY0ZjY4YzciLCJyb2xlIjoiZW1wbG95ZWUiLCJpYXQiOjE3NTc4NzEwOTQsImV4cCI6MTc1Nzk1NzQ5NH0.VtTTTF-CUXJ6gGXghGEmDUqPLkcx1gWzMTwZXmndQlQ

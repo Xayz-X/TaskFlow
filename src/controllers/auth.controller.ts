@@ -76,6 +76,7 @@ export const authLogin = async (
   };
   response.status(resp.statusCode).send(resp);
 };
+
 export const authRefresh = async (
   request: Request,
   response: Response
@@ -97,6 +98,7 @@ export const authRefresh = async (
   };
   response.status(resp.statusCode).send(resp);
 };
+
 export const authLogout = async (
   request: Request,
   response: Response<ResponseObject>
@@ -104,7 +106,6 @@ export const authLogout = async (
   if (!request.user) {
     return;
   }
-  console.log(` Try to logout ${request.user.email}`);
   await UserModel.updateOne(
     { email: request.user.email },
     { $set: { isLoggedIn: false } }

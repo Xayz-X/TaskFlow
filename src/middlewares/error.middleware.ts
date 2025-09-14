@@ -63,7 +63,7 @@ const errorMiddleware = async (
     }
 
     // we will add more errors type here...
-    // console.log(err);
+    console.log(`Erro: ${err} | type of ${typeof err}`);
     response.status(error.statusCode).send(error);
   } catch (error) {
     next(error);

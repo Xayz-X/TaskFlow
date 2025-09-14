@@ -5,6 +5,7 @@ import { Request, Response } from "express-serve-static-core";
 
 import limiter from "./config/ratelimit";
 import authRouter from "./routes/auth.route";
+import userRouter from "./routes/user.route";
 import { ENVIRONMENT, PORT } from "./config/env";
 import connectToDatabase from "./database/database";
 import errorMiddleware from "./middlewares/error.middleware";
@@ -20,6 +21,7 @@ app.use(helmet());
 
 // routes
 app.use("/auth", authRouter);
+app.use("/users", userRouter);
 
 // health check ednpoint
 app.get("/health", (request: Request, response: Response): void => {
