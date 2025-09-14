@@ -1,13 +1,12 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { Request, Response } from "express-serve-static-core";
 
-import parseDuration from "../helpers/datetime";
 import UserModel from "../models/user.model";
 import { ResponseObject } from "../types/response.type";
 import { APIError } from "../helpers/error";
-import { StatusCodes } from "../helpers/statusCodes";
-import { JWT_EXPIRATION, JWT_SECRET } from "../config/env";
+import { StatusCodes } from "../types/statusCodes";
+import signJwtToken from "../helpers/authsign";
+
 import {
   RegisterRequestBody,
   LoginRequestbody,
@@ -58,19 +57,35 @@ export const authLogin = async (
     }
   }
   // Generate a new JWT token
-  const expiresAt =
-    Math.floor(Date.now() / 1000) + parseDuration(JWT_EXPIRATION);
-  const jwtToken = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRATION as jwt.SignOptions["expiresIn"],
-  });
+  const { token, expiresAt } = signJwtToken(user._id.toString(), user.role);
 
   const resp: ResponseObject = {
     success: true,
     statusCode: StatusCodes.SUCCESS,
     message: `logged in successfuly`,
-    data: { token: jwtToken, expiresAt },
+    data: { token, expiresAt },
   };
   response.status(resp.statusCode).send(resp);
 };
-export const authRefresh = (request: Request, response: Response): void => {};
+export const authRefresh = async (
+  request: Request,
+  response: Response
+): Promise<void> => {
+  // we will have already the user else it will raise error in authorize middleware
+  if (!request.user) {
+    return;
+  }
+  // Generate a new JWT token
+  const { token, expiresAt } = signJwtToken(
+    request.user._id.toString(),
+    request.user.role
+  );
+  const resp: ResponseObject = {
+    success: true,
+    statusCode: StatusCodes.SUCCESS,
+    message: `token refreshed successfully`,
+    data: { token, expiresAt },
+  };
+  response.status(resp.statusCode).send(resp);
+};
 export const authLogout = (request: Request, response: Response): void => {};

@@ -1,5 +1,5 @@
 import { Router } from "express";
-
+import authorizeMiddleware from "../middlewares/authorize.middleware";
 import {
   authRegister,
   authLogin,
@@ -27,7 +27,7 @@ authRouter.post(
   requestValidatorMiddleware(loginValidateSchema),
   authLogin
 );
-authRouter.get("/refresh", authRefresh);
+authRouter.get("/refresh", authorizeMiddleware(true), authRefresh);
 authRouter.post("/logout", authLogout);
 
 export default authRouter;

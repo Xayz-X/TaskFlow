@@ -2,10 +2,10 @@ import { ZodError } from "zod";
 import mongoose from "mongoose";
 import { MongoServerError } from "mongodb";
 import { NextFunction, Request, Response } from "express-serve-static-core";
-
+import { JsonWebTokenError } from "jsonwebtoken";
 import { ErrorObject } from "../types/error.type";
 import { APIError } from "../helpers/error";
-import { StatusCodes } from "../helpers/statusCodes";
+import { StatusCodes } from "../types/statusCodes";
 
 const errorMiddleware = async (
   err: unknown,
@@ -26,6 +26,9 @@ const errorMiddleware = async (
     if (err instanceof APIError) {
       error.statusCode = err.statusCode;
       error.message = err.message;
+    } else if (err instanceof JsonWebTokenError) {
+      error.statusCode = 401;
+      error.message = "invalid authorization token";
     } else if (err instanceof ZodError) {
       const messages = err.issues
         .map((issue) => `${issue.message} -> ${issue.path.join(", ")}`)

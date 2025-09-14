@@ -1,7 +1,7 @@
 import { rateLimit } from "express-rate-limit";
 import { Request, Response } from "express-serve-static-core";
 import { ErrorObject } from "../types/error.type";
-import { StatusCodes } from "../helpers/statusCodes";
+import { StatusCodes } from "../types/statusCodes";
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 min
