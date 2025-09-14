@@ -26,16 +26,13 @@ const errorMiddleware = async (
     if (err instanceof APIError) {
       error.statusCode = err.statusCode;
       error.message = err.message;
-    }
-
-    if (err instanceof ZodError) {
+    } else if (err instanceof ZodError) {
       const messages = err.issues
         .map((issue) => `${issue.message} -> ${issue.path.join(", ")}`)
         .join("; ");
       error.statusCode = StatusCodes.BAD_REQUEST;
       error.message = messages;
-    }
-    if (
+    } else if (
       err instanceof mongoose.Error &&
       err.cause instanceof MongoServerError
     ) {
@@ -50,9 +47,7 @@ const errorMiddleware = async (
       const field = Object.keys(err.keyValue)[0];
       error.statusCode = StatusCodes.CONFLICT;
       error.message = `${field} is already taken`;
-    }
-
-    if (err instanceof mongoose.Error.CastError) {
+    } else if (err instanceof mongoose.Error.CastError) {
       // Mongoose-specific errors
       error.statusCode = StatusCodes.NOT_FOUND;
       error.message = "Resource not found";
