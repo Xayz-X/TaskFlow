@@ -12,19 +12,19 @@ import {
   loginValidateSchema,
 } from "../validators/auth.validator";
 
-import validateRequestMiddleware from "../middlewares/validate.middleware";
+import requestValidatorMiddleware from "../middlewares/validate.middleware";
 
 const authRouter = Router();
 
 authRouter.post(
   "/register",
-  validateRequestMiddleware(registerValidatorSchema),
+  requestValidatorMiddleware(registerValidatorSchema),
   authRegister
 ); // admin
 
 authRouter.post(
   "/login",
-  validateRequestMiddleware(loginValidateSchema),
+  requestValidatorMiddleware(loginValidateSchema),
   authLogin
 );
 authRouter.get("/refresh", authRefresh);
