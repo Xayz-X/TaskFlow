@@ -6,5 +6,6 @@ export enum StatusCodes {
   FORBIDDEN = 401,
   NOT_FOUND = 404,
   CONFLICT = 409,
+  RATELIMIT = 429,
   INTERNAL_SERVER_ERROR = 500,
 }

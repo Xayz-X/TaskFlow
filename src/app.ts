@@ -1,8 +1,9 @@
-import express from "express";
 import helmet from "helmet";
+import express from "express";
 import cookieParser from "cookie-parser";
 import { Request, Response } from "express-serve-static-core";
 
+import limiter from "./config/ratelimit";
 import authRouter from "./routes/auth.route";
 import { ENVIRONMENT, PORT } from "./config/env";
 import connectToDatabase from "./database/database";
@@ -11,6 +12,7 @@ import errorMiddleware from "./middlewares/error.middleware";
 const app = express();
 
 // middlewares
+app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
