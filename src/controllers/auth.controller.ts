@@ -18,12 +18,12 @@ export const authRegister = async (
   response: Response<ResponseObject>
 ): Promise<void> => {
   const { username, email, password } = request.body;
-
+  // Check if a user already exist with same email
   const existingUser = await UserModel.findOne({ email });
   if (existingUser) {
     throw new APIError(StatusCodes.CONFLICT, "email is taken");
   }
-
+  // Hashed the password before store in DB
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -47,8 +47,7 @@ export const authLogin = async (
   // Query the user by email
   const { email, password } = request.body;
   const user = await UserModel.findOne({ email }).select("+password");
-
-  // 1st -> validate user an exist with the requested email
+  // 1st -> Validate user exist with the requested email
   // 2nd -> Validate if the hashed password match with the requested password
   if (!user) {
     throw new APIError(StatusCodes.FORBIDDEN, "invalid email or password");
