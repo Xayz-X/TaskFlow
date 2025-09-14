@@ -4,9 +4,9 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 
 const requestValidatorMiddleware =
   (schema: z.ZodObject) =>
-  (req: Request, res: Response, next: NextFunction) => {
+  (request: Request, response: Response, next: NextFunction) => {
     try {
-      req.body = schema.parse(req.body);
+      request.body = schema.parse(request.body);
       next();
     } catch (err) {
       next(err);

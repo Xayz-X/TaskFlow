@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Request, Response } from "express-serve-static-core";
 
-import parseDuration from "../helpers/dt";
+import parseDuration from "../helpers/datetime";
 import UserModel from "../models/user.model";
 import { ResponseObject } from "../types/response.type";
 import { APIError } from "../helpers/error";
