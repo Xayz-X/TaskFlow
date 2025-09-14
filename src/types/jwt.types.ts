@@ -1,4 +1,4 @@
-import { UserRole } from "./roles.type";
+import { UserRole } from "./user-role.enum";
 
 export interface AuthenticateJwtPayload {
   userId: string;

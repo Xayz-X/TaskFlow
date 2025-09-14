@@ -4,7 +4,7 @@ import { Request, Response } from "express-serve-static-core";
 import UserModel from "../models/user.model";
 import { ResponseObject } from "../types/response.type";
 import { APIError } from "../helpers/error";
-import { StatusCodes } from "../types/statusCodes";
+import { StatusCode } from "../types/StatusCode.enum";
 import signJwtToken from "../helpers/authsign";
 
 import {
@@ -20,7 +20,7 @@ export const authRegister = async (
   // Check if a user already exist with same email
   const existingUser = await UserModel.findOne({ email });
   if (existingUser) {
-    throw new APIError(StatusCodes.CONFLICT, "email is taken");
+    throw new APIError(StatusCode.CONFLICT, "email is taken");
   }
   // Hashed the password before store in DB
   const salt = await bcrypt.genSalt();
@@ -32,7 +32,7 @@ export const authRegister = async (
 
   const resp: ResponseObject = {
     success: true,
-    statusCode: StatusCodes.RESOURCE_CREATED,
+    statusCode: StatusCode.RESOURCE_CREATED,
     message: `user has been created`,
     data: newUser,
   };
@@ -49,11 +49,11 @@ export const authLogin = async (
   // 1st -> Validate user exist with the requested email
   // 2nd -> Validate if the hashed password match with the requested password
   if (!user) {
-    throw new APIError(StatusCodes.FORBIDDEN, "invalid email or password");
+    throw new APIError(StatusCode.FORBIDDEN, "invalid email or password");
   } else {
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      throw new APIError(StatusCodes.FORBIDDEN, "invalid email or password");
+      throw new APIError(StatusCode.FORBIDDEN, "invalid email or password");
     }
   }
   // Generate a new JWT token
@@ -61,7 +61,7 @@ export const authLogin = async (
 
   const resp: ResponseObject = {
     success: true,
-    statusCode: StatusCodes.SUCCESS,
+    statusCode: StatusCode.SUCCESS,
     message: `logged in successfuly`,
     data: { token, expiresAt },
   };
@@ -82,7 +82,7 @@ export const authRefresh = async (
   );
   const resp: ResponseObject = {
     success: true,
-    statusCode: StatusCodes.SUCCESS,
+    statusCode: StatusCode.SUCCESS,
     message: `token refreshed successfully`,
     data: { token, expiresAt },
   };

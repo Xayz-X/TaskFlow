@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { UserRole } from "../types/roles.type";
+import { UserRole } from "../types/user-role.enum";
 import parseDuration from "./datetime";
 import { AuthenticateJwtPayload } from "../types/jwt.types";
 import { JWT_SECRET, JWT_EXPIRATION } from "../config/env";

@@ -1,4 +1,4 @@
-export enum StatusCodes {
+export enum StatusCode {
   SUCCESS = 200,
   OK = 200,
   RESOURCE_CREATED = 201,

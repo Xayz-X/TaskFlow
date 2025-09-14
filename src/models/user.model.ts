@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { UserRole } from "../types/roles.type";
+import { UserRole } from "../types/user-role.enum";
 
 const userSchema = new mongoose.Schema(
   {

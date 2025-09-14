@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import jwt from "jsonwebtoken";
 import { APIError } from "../helpers/error";
-import { StatusCodes } from "../types/statusCodes";
+import { StatusCode } from "../types/status-code.enum";
 import { JWT_SECRET } from "../config/env";
 import UserModel from "../models/user.model";
 import { AuthenticateJwtPayload } from "../types/jwt.types";
@@ -17,14 +17,14 @@ const authorizeMiddleware =
       let token: string | undefined;
       if (!request.headers.authorization) {
         throw new APIError(
-          StatusCodes.FORBIDDEN,
+          StatusCode.FORBIDDEN,
           "authorization key is missing in the header"
         );
       }
       token = request.headers.authorization.split(" ")[1];
       if (!token) {
         throw new APIError(
-          StatusCodes.FORBIDDEN,
+          StatusCode.FORBIDDEN,
           "authorization key is missing in the header"
         );
       }
@@ -37,7 +37,7 @@ const authorizeMiddleware =
       const userData = await UserModel.findById(payload.userId);
       if (!userData) {
         throw new APIError(
-          StatusCodes.FORBIDDEN,
+          StatusCode.FORBIDDEN,
           "user does not exist, authentication failed"
         );
       }

@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from "express-serve-static-core";
 import { JsonWebTokenError } from "jsonwebtoken";
 import { ErrorObject } from "../types/error.type";
 import { APIError } from "../helpers/error";
-import { StatusCodes } from "../types/statusCodes";
+import { StatusCode } from "../types/status-code.enum";
 
 const errorMiddleware = async (
   err: unknown,
@@ -18,7 +18,7 @@ const errorMiddleware = async (
     // with a generic message
     const error: ErrorObject = {
       success: false,
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      statusCode: StatusCode.INTERNAL_SERVER_ERROR,
       message: `Something went wrong please try again later.`,
     };
 
@@ -33,7 +33,7 @@ const errorMiddleware = async (
       const messages = err.issues
         .map((issue) => `${issue.message} -> ${issue.path.join(", ")}`)
         .join("; ");
-      error.statusCode = StatusCodes.BAD_REQUEST;
+      error.statusCode = StatusCode.BAD_REQUEST;
       error.message = messages;
     } else if (
       err instanceof mongoose.Error &&
@@ -42,23 +42,23 @@ const errorMiddleware = async (
       // Handle duplicate key through the cause
       if (err.cause.code === 11000) {
         const field = Object.keys(err.cause.keyValue)[0];
-        error.statusCode = StatusCodes.CONFLICT;
+        error.statusCode = StatusCode.CONFLICT;
         error.message = `${field} is already taken`;
       }
     } else if (err instanceof MongoServerError && err.code === 11000) {
       // Handle raw MongoServerError (first attempt)
       const field = Object.keys(err.keyValue)[0];
-      error.statusCode = StatusCodes.CONFLICT;
+      error.statusCode = StatusCode.CONFLICT;
       error.message = `${field} is already taken`;
     } else if (err instanceof mongoose.Error.CastError) {
       // Mongoose-specific errors
-      error.statusCode = StatusCodes.NOT_FOUND;
+      error.statusCode = StatusCode.NOT_FOUND;
       error.message = "Resource not found";
     } else if (err instanceof mongoose.Error.ValidationError) {
       const messages = Object.values(err.errors)
         .map((e) => e.message)
         .join(", ");
-      error.statusCode = StatusCodes.BAD_REQUEST;
+      error.statusCode = StatusCode.BAD_REQUEST;
       error.message = messages;
     }
 

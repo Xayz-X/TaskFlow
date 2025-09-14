@@ -1,8 +1,8 @@
-import { StatusCodes } from "../types/statusCodes";
+import { StatusCode } from "../types/status-code.enum";
 export class APIError extends Error {
-  public statusCode: StatusCodes;
+  public statusCode: StatusCode;
 
-  constructor(statusCode: StatusCodes, message: string) {
+  constructor(statusCode: StatusCode, message: string) {
     super(message);
     this.statusCode = statusCode;
   }
